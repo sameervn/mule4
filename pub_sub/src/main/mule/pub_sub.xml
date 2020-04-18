@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f47e1f93-84fb-4bb3-8476-b2ce1729927e" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<vm:config name="VM_Config" doc:name="VM Config" doc:id="f7a4870f-627c-461a-afd3-342c3d8c2d70" >
+		<vm:queues >
+			<vm:queue queueName="CustomerQueue" />
+		</vm:queues>
+	</vm:config>
+	<flow name="publish" doc:id="6be53f78-aaf9-4e93-878f-07c0980fdc41" >
+		<http:listener doc:name="POST customer" doc:id="f673e9a8-648b-4752-af81-e757b0c608b7" config-ref="HTTP_Listener_config" path="/customer" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c37f8078-1077-4b81-8e4b-315958950823" message="**  Before Publish **"/>
+		<vm:publish-consume queueName="CustomerQueue" doc:name="Publish consume" doc:id="f7c37558-ec12-401e-8dcc-c20109e0ec04" config-ref="VM_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="dacf9346-6bd6-4431-9ce8-275ff50e132e" message="**  After Publish **"/>
+	</flow>
+	<flow name="pub_subFlow" doc:id="3eae922d-3030-4149-ac1c-41782c8c6a88" >
+		<vm:listener queueName="CustomerQueue" doc:name="Listener" doc:id="fbb9ee32-5a80-4f1a-becd-a553e24869bf" config-ref="VM_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="3ed24d05-0c49-495a-a026-26235026bb12" message="#[payload]"/>
+	</flow>
+</mule>

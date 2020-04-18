@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="ba69c936-b294-4223-af2c-c937012373e8" >
+		<file:connection workingDir="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/input" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="12e9e274-cc84-4518-b9bd-28f0bbc23415" >
+		<file:connection workingDir="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/output" />
+	</file:config>
+	<flow name="for_eachFlow" doc:id="271f28ee-9e21-4a35-af9b-0c579e8afcde" >
+		<file:listener doc:name="On New or Updated File" doc:id="79edfca0-adf1-4c55-9d4c-67454d600d25" config-ref="File_Config" directory="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/input" autoDelete="true" moveToDirectory="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/output">
+			<scheduling-strategy >
+				<fixed-frequency frequency="5" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</file:listener>
+		<ee:transform doc:name="Transform Message" doc:id="87c784b7-d8c9-4bcc-a498-0aafc78276a5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0a3ffa49-5325-436a-ac9f-ef0999b0965b" message="** Before For Each **"/>
+		<foreach doc:name="For Each" doc:id="434872ae-3cae-4755-b7e9-895b2568e516" >
+			<logger level="INFO" doc:name="Logger" doc:id="dbcffb7d-3b66-4ee5-8d1c-63121d7228f4" message="#[payload]" />
+			<set-variable value="#[payload.street]" doc:name="Set Variable" doc:id="3d905a4e-c564-4357-bfbb-963fd2768732" variableName="streetVar1"/>
+			<ee:transform doc:name="Transform Message" doc:id="b1d79653-1764-4485-b511-290174a40b45" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+---
+payload]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<file:write doc:name="Write" doc:id="7a541d8f-7f07-4fe5-8577-1855eb454cbb" config-ref="File_Config1" path='#[vars.streetVar1 ++ ".txt"]' mode="CREATE_NEW"/>
+		</foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="d24cd75b-56be-407d-aa27-896d6e12f6f9" message="** After For Each **"/>
+	</flow>
+</mule>

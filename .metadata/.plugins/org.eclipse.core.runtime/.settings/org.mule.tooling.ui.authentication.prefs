@@ -1,0 +1,6 @@
+authenticated.users=[{"id"\:"0dcff520-96c9-456a-ab7f-dc8082914c62","token"\:"b9886c81-8e16-406f-870e-7565039e3b1e","userId"\:"sameervn","refreshToken"\:"","baseUrl"\:"https\://anypoint.mulesoft.com/"}]
+current.token=b9886c81-8e16-406f-870e-7565039e3b1e
+current.user=sameervn
+eclipse.preferences.version=1
+expiration.time=100
+org.mule.tooling.amc.apps={"userProjectMap"\:{"sameervn"\:{"employee"\:"{\\"applicationName\\"\:\\"employeesam123\\",\\"muleRuntime\\"\:\\"4.2.2\\",\\"properties\\"\:{}}"}}}

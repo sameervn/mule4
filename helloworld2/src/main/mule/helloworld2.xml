@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2ed1f879-bc0a-4ef7-9fd0-c31c408b4de8" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="helloworld2Flow" doc:id="5ab2084c-da8c-425e-aa5c-ce94f950507d" >
+		<http:listener doc:name="Listener" doc:id="d803890f-7b84-49c2-a3ee-ce1c13297716" config-ref="HTTP_Listener_config" path="/helloworld"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a70129ae-cd14-482a-9daf-cd6b0c635346" message="Welcome to HelloWorld Project"/>
+		<set-variable value="Sameer" doc:name="Set Variable" doc:id="f2862ec6-b960-4c02-97a6-b9322d9ac989" variableName="var1"/>
+		<ee:transform doc:name="Transform Message" doc:id="0331067c-de1d-414b-bf98-82a6192a106e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+vars.var1]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="88c2ea54-29f6-4aba-af6f-d39e8ab60927" message="#[payload.String]"/>
+	</flow>
+</mule>

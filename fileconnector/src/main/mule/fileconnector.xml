@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="2140f052-6f8b-4721-b483-aab96c0422f8" >
+		<file:connection workingDir="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/input" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="974945bd-80ea-4bac-ba37-72eadb7d7e7d" >
+		<file:connection workingDir="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/input" />
+	</file:config>
+	<flow name="fileconnectorFlow" doc:id="b2a9a721-af01-4478-b689-c111039c02fe" >
+		<file:listener doc:name="On New or Updated File" doc:id="0b4279ee-bd88-4b96-b5b5-b7fdef30c6d4" config-ref="File_Config1" directory="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/input" autoDelete="true" moveToDirectory="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/output">
+			<scheduling-strategy >
+				<fixed-frequency frequency="5" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+		</file:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="14f1e956-9389-4a33-9763-bdb591b087ee" message="#[payload]"/>
+	</flow>
+</mule>

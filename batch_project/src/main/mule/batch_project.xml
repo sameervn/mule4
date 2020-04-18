@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="f2d6dc94-2e54-43dd-9010-4078eec5bcd2" >
+		<file:connection workingDir="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/input" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="154e0824-3bdc-488e-a32e-ad2e40d6feb0" >
+		<file:connection workingDir="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/output" />
+	</file:config>
+	<flow name="batch_projectFlow" doc:id="c0a99044-874f-4093-b518-c89d7c48a71c" >
+		<file:listener doc:name="On New or Updated File" doc:id="8a7d231b-9e08-4af4-8933-e643669c35e6" config-ref="File_Config" directory="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/input" autoDelete="true" moveToDirectory="/Users/sudhirpadhan/Desktop/Sameer/Mule/WorkSpace/fileconnector/output">
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" timeUnit="SECONDS" />
+			</scheduling-strategy>
+		</file:listener>
+		<ee:transform doc:name="Transform Message" doc:id="5d1dc36f-3b20-4e5f-a249-a979fec6f395" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<batch:job jobName="batch_projectBatch_Job" doc:id="c91a6c17-d99a-4a7b-8bd9-4c0dace497c2" >
+			<batch:process-records >
+				<batch:step name="Batch_Step" doc:id="fcd0c49c-a3a9-41b7-ac3a-75ef521d02b3" >
+					<set-variable value="#[payload.policyID ++ '.csv']" doc:name="Set Variable" doc:id="4af23fdc-ac56-458a-8229-e76b1b2e6fda" variableName="policyID"/>
+					<ee:transform doc:name="Transform Message" doc:id="f3b51351-5fe7-4210-b052-7fd211e61778" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+---
+payload]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<file:write doc:name="Write" doc:id="a29e684d-5b17-46de-b1b3-ab006f50bd2f" config-ref="File_Config1" path="#[vars.policyID]" mode="CREATE_NEW"/>
+				</batch:step>
+			</batch:process-records>
+		</batch:job>
+	</flow>
+</mule>

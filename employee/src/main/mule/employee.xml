@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="91e23c90-a4a5-49d1-838e-41ec75e472e3" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="d56ecf71-9556-4ded-8483-33ce4a9fa90a" >
+		<http:request-connection host="dummy.restapiexample.com" />
+	</http:request-config>
+	<flow name="employeeFlow" doc:id="aacafa67-33dd-42ae-ba7c-47a09edc76f5" >
+		<http:listener doc:name="Listener" doc:id="8311d65f-959c-49a5-a8e7-a11b84e9039f" config-ref="HTTP_Listener_config" path="/emp"/>
+		<http:request method="GET" doc:name="Request" doc:id="fd054f17-5b6d-4e54-a221-7cd1bfa96dbf" config-ref="HTTP_Request_configuration" path="/api/v1/employees"/>
+		<logger level="INFO" doc:name="Logger" doc:id="0060ace1-650d-4f16-94a9-f621d2f941cd" message="**COMPLETED**"/>
+	</flow>
+</mule>

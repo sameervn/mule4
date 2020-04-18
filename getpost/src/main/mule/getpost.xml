@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d0884e6e-915b-4347-a17a-f3160e368ce6" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="getpostFlow" doc:id="f2a1ca7d-fe14-4db4-9c42-5bd722c61cf5" >
+		<http:listener doc:name="Listener" doc:id="1080748b-a0ee-4cbc-8159-8aea23556c7b" config-ref="HTTP_Listener_config" path="/hello" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a4ab8ae4-10be-41fc-b125-2146bfdad242" message="this is gettig invoked from GET method"/>
+		<set-variable value="Sameer" doc:name="Set Variable" doc:id="8eaa2d92-95ac-42c9-9048-19d636b10260" variableName="var1"/>
+		<set-payload value="Hello $var1" doc:name="Set Payload" doc:id="907b5122-1393-476a-898a-caf374d5b565" />
+	</flow>
+	<flow name="getpostFlow1" doc:id="3f578dcb-ca3a-4ef5-bf52-8905b288bb03" >
+		<http:listener doc:name="Copy_of_Listener" doc:id="c55fbe79-5504-4025-b023-12c4c17637cc" config-ref="HTTP_Listener_config" path="/hello" allowedMethods="POST" />
+		<logger level="INFO" doc:name="Copy_of_Logger" doc:id="123792c3-0e96-42c8-9449-42b5c7300da1" message="this is gettig invoked from POST method" />
+	</flow>
+</mule>
