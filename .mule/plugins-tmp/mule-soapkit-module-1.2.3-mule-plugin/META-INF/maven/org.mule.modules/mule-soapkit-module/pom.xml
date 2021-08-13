@@ -61,7 +61,7 @@
         <dependency>
             <artifactId>bcprov-jdk15on</artifactId>
             <groupId>org.bouncycastle</groupId>
-            <version>1.60</version>
+            <version>1.67</version>
         </dependency>
 
         <!-- needed to routing -->
